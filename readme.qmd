@@ -1,0 +1,92 @@
+---
+title: "Data Wrangling Final"
+author: Chris Perry
+format: gfm
+execute: 
+  warning: false
+  message: false
+  errors: false
+jupyter: python3
+---
+
+
+Read in the data:
+```{python}
+import pandas as pd
+import matplotlib.pyplot as plt
+import statsmodels.formula.api as smf
+import seaborn as sns
+
+batting = pd.read_csv("/Users/chrisperry/Downloads/Batting.csv")
+people = pd.read_csv("/Users/chrisperry/Downloads/People.csv")
+salary = pd.read_csv("/Users/chrisperry/Downloads/Salaries.csv")
+```
+
+merge data:
+```{python}
+merge1 = pd.merge(batting, people, how='left', left_on='playerID', right_on='playerID')
+merge2 = pd.merge(merge1, salary, how='left', left_on='playerID', right_on='playerID')
+merge2.columns
+merge2.head
+```
+
+Filter merged data by last 5 years to view up-to-date stats:
+```{python}
+five = merge2[merge2['yearID_x'] >= merge2['yearID_x'].max() - 4]
+five.head
+```
+
+Filter by minimum at bats to provide accurate results
+```{python}
+f_ab = five[five['AB'] >= 100].copy()
+f_ab.head
+```
+
+Create an advanced statistic: OBP
+```{python}
+f_ab['OBP'] = (
+    (f_ab['H'] + f_ab['BB'] + f_ab['HBP']) / 
+    (f_ab['AB'] + f_ab['BB'] + f_ab['HBP'] + f_ab['SF'])
+)
+
+f_ab.columns
+```
+
+
+Visualize OBP and Salary as a scatterplot. Is there a visual relationship?
+
+```{python}
+sns.relplot(data = f_ab, x = 'salary', y ='OBP')
+plt.show()
+```
+
+How many players have a salary over 3650000 and an OBP over 0.35?
+```{python}
+over365 = f_ab[(f_ab['salary']> 3650000) & (f_ab['OBP'] > 0.35)]
+
+over365
+```
+
+Is there a strong correlation between the number of at bats and on base percentage?
+
+```{python}
+sns.relplot(data = f_ab, x = 'AB', y ='OBP')
+plt.show()
+```
+
+
+Is there a strong correlation between RBIs and OBP?
+
+```{python}
+sns.relplot(data = f_ab, x = 'RBI', y ='OBP')
+plt.show()
+```
+
+
+What is the correlation between OBP and multiple variables: HR, H, BB, HBP, RBI, AB, games batting, and salary? Which variables have the highest correlation?
+
+```{python}
+fit = smf.ols(formula='OBP ~ HR + H + BB + HBP + RBI + AB + G_batting + salary', data = f_ab).fit()
+fit.summary()
+```
+
