@@ -160,7 +160,7 @@ f_ab.head
 
     [3607 rows x 52 columns]>
 
-Create an advanced statistic: OBP
+Create an advanced statistic: OBP - on base percentage
 
 ``` python
 f_ab['OBP'] = (
@@ -189,7 +189,9 @@ sns.relplot(data = f_ab, x = 'salary', y ='OBP')
 plt.show()
 ```
 
-![](readme_files/figure-commonmark/cell-7-output-1.png)
+![](README_files/figure-commonmark/cell-7-output-1.png)
+
+There appears to be little to no correlation between salary and obp
 
 How many players have a salary over 3650000 and an OBP over 0.35?
 
@@ -229,6 +231,10 @@ over365
 <p>126 rows × 53 columns</p>
 </div>
 
+There are 126 rows available providing records of this instance. Joey
+Votto and Jose Abreu were two players in 2020 and 2021 that had a salary
+of over 3650000 and an OBP of over 0.35
+
 Is there a strong correlation between the number of at bats and on base
 percentage?
 
@@ -237,7 +243,11 @@ sns.relplot(data = f_ab, x = 'AB', y ='OBP')
 plt.show()
 ```
 
-![](readme_files/figure-commonmark/cell-9-output-1.png)
+![](README_files/figure-commonmark/cell-9-output-1.png)
+
+There is a stronger correlation here between AB and OBP compared to
+salary. This makes sense as likely the more at bats for a player the
+better chance they have to raise their OBP
 
 Is there a strong correlation between RBIs and OBP?
 
@@ -246,7 +256,13 @@ sns.relplot(data = f_ab, x = 'RBI', y ='OBP')
 plt.show()
 ```
 
-![](readme_files/figure-commonmark/cell-10-output-1.png)
+![](README_files/figure-commonmark/cell-10-output-1.png)
+
+The correlation between RBI’s and OBP appears to be positive just as
+AB’s and OBP. RBI’s do not necessarily correlate to OBP as a player can
+record an RBI and still be out on the play, but there are many
+scenarios(double - leads to a run score) that a player gets on base and
+scores runs in the process.
 
 What is the correlation between OBP and multiple variables: HR, H, BB,
 HBP, RBI, AB, games batting, and salary? Which variables have the
@@ -263,7 +279,7 @@ fit.summary()
 | Model:            | OLS              | Adj. R-squared:     | 0.772     |
 | Method:           | Least Squares    | F-statistic:        | 222.8     |
 | Date:             | Fri, 05 Dec 2025 | Prob (F-statistic): | 8.28e-162 |
-| Time:             | 12:48:47         | Log-Likelihood:     | 1274.5    |
+| Time:             | 16:08:49         | Log-Likelihood:     | 1274.5    |
 | No. Observations: | 524              | AIC:                | -2531.    |
 | Df Residuals:     | 515              | BIC:                | -2493.    |
 | Df Model:         | 8                |                     |           |
@@ -292,3 +308,9 @@ OLS Regression Results
 | Kurtosis:      | 6.706   | Cond. No.         | 1.63e+07 |
 
 <br/><br/>Notes:<br/>[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.<br/>[2] The condition number is large, 1.63e+07. This might indicate that there are<br/>strong multicollinearity or other numerical problems.
+
+There are enough variables contained in this regression to display a
+positive correlation. It is important to note the multicollinearity that
+occurs here as stats like Hits, BB, HBP, and AB all are included in the
+OBP formula. However, the goal was to research which stats impacted OBP
+more than others, even those included within the OBP formula.
